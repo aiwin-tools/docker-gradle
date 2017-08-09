@@ -1,0 +1,1 @@
+docker build --build-arg GITLAB_USER=$GITLAB_USER --build-arg GITLAB_PASS=$GITLAB_PASS -t $IMAGE_NAME .
