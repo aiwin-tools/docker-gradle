@@ -1,13 +1,37 @@
-FROM gradle:4.0.1-jdk8
+FROM openjdk:8-jdk
 
-USER root
+ARG USER_HOME_DIR="/root"
+ARG GRADLE_VERSION="4.0.1"
+ARG GRADLE_DOWNLOAD_SHA256=d717e46200d1359893f891dab047fdab98784143ac76861b53c50dbd03b44fd4
+ARG GITLAB_USER
+ARG GITLAB_PASS
 
-RUN apt-get update && apt-get install -y jq zip python
+RUN apt-get update && apt-get install -y jq zip python git
 
 RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "/tmp/get-pip.py" && \
   python /tmp/get-pip.py && \
   pip install awscli --ignore-installed six
 
-USER gradle
+ENV GRADLE_HOME /opt/gradle
+ENV GRADLE_USER_HOME "$USER_HOME_DIR/.gradle"
 
-ADD sonarqube.gradle $HOME
+RUN set -o errexit -o nounset \
+	&& echo "Downloading Gradle" \
+	&& wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+	\
+	&& echo "Checking download hash" \
+	&& echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
+	\
+	&& echo "Installing Gradle" \
+	&& unzip gradle.zip \
+	&& rm gradle.zip \
+	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
+	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
+
+RUN git clone https://${GITLAB_USER}:${GITLAB_PASS}@gitlab.com/aiwin-tools/ci-cd.git "$USER_HOME_DIR/ci-cd"
+
+VOLUME "$USER_HOME_DIR/.gradle"
+
+ADD sonarqube.gradle $GRADLE_HOME
+
+CMD ["gradle"]
