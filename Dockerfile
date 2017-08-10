@@ -28,7 +28,7 @@ RUN set -o errexit -o nounset \
 	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
 	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
 
-RUN git clone https://${GITLAB_USER}:${GITLAB_PASS}@gitlab.com/aiwin-tools/ci-cd.git "$USER_HOME_DIR/ci-cd"
+RUN git clone https://github.com/aiwin-tools/devops-scripts.git "$USER_HOME_DIR/scripts"
 
 VOLUME "$USER_HOME_DIR/.gradle"
 
