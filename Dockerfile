@@ -1,5 +1,7 @@
 FROM openjdk:8-jdk
 
+LABEL maintainer="javier.boo@aiwin.es"
+
 ARG USER_HOME_DIR="/root"
 ARG GRADLE_VERSION="4.0.1"
 ARG GRADLE_DOWNLOAD_SHA256=d717e46200d1359893f891dab047fdab98784143ac76861b53c50dbd03b44fd4
@@ -26,7 +28,7 @@ RUN set -o errexit -o nounset \
 	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
 	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
 
-RUN git clone https://github.com/aiwin-tools/devops-scripts.git "$USER_HOME_DIR/scripts"
+RUN git clone https://github.com/aiwin-tools/devops-scripts.git "$HOME/scripts"
 
 VOLUME "$USER_HOME_DIR/.gradle"
 
