@@ -3,8 +3,6 @@ FROM openjdk:8-jdk
 ARG USER_HOME_DIR="/root"
 ARG GRADLE_VERSION="4.0.1"
 ARG GRADLE_DOWNLOAD_SHA256=d717e46200d1359893f891dab047fdab98784143ac76861b53c50dbd03b44fd4
-ARG GITLAB_USER
-ARG GITLAB_PASS
 
 RUN apt-get update && apt-get install -y jq zip python git
 
